@@ -22,7 +22,7 @@ class Geocon {
       this.e = Math.sqrt(1 - Math.pow(this.b, 2) / Math.pow(this.a, 2));
       // e'
       this.e0 = this.e / Math.sqrt(1 - Math.pow(this.e, 1));
-    },
+    }
 
 
     /**
@@ -37,7 +37,7 @@ class Geocon {
      * This method assumes that all data validation has been performed prior to
      * calling it.
      */
-    latLngToUtm: function (lat, lngd) {
+    latLngToUtm (lat, lngd) {
         var phi = lat * DRAD;                              // convert latitude to radians
         var lng = lngd * DRAD;                             // convert longitude to radians
         var utmz = 1 + Math.floor((lngd + 180) / 6);            // longitude to utm zone
@@ -100,7 +100,7 @@ class Geocon {
         }
 
         return rv;
-    },
+    }
 
 
     /**
@@ -113,7 +113,7 @@ class Geocon {
      * @param {} utmz: utm zone
      * @param {} southern: bool indicating coords are in southern hemisphere
      */
-    utmToLatLng: function (x, y, utmz, southern) {
+    utmToLatLng (x, y, utmz, southern) {
         var esq = (1 - (this.b / this.a) * (this.b / this.a));
         var e0sq = this.e * this.e / (1 - Math.pow(this.e, 2));
         var zcm = 3 + 6 * (utmz - 1) - 180;                         // Central meridian of zone
@@ -141,7 +141,7 @@ class Geocon {
         lng = lngd = zcm + lng / DRAD;
 
         return { lat: lat, lng: lng };
-    },
+    }
 
 
     /**
@@ -156,10 +156,10 @@ class Geocon {
      *
      * @returns { lat: y, lng: x }
      */
-    natoToLatLng: function (utme, utmn, utmz, latz, digraph) {
+    natoToLatLng (utme, utmn, utmz, latz, digraph) {
         var coords = this.natoToUtm(utme, utmn, utmz, latz, digraph);
         return this.utmToLatLng(coords.easting, coords.northing, coords.zone, coords.southern);
-    },
+    }
 
 
     /**
@@ -175,7 +175,7 @@ class Geocon {
      *
      * @returns {} a structure { norhting: y, easting: x, zone: zone, southern: hemisphere }
      */
-    natoToUtm: function (utme, utmn, utmz, latz, digraph) {
+    natoToUtm (utme, utmn, utmz, latz, digraph) {
         latz = latz.toUpperCase();
         digraph = digraph.toUpperCase();
 
@@ -224,7 +224,7 @@ class Geocon {
         var southern = nbase < 10000000;
 
         return { northing: y, easting: x, zone: utmz, southern: southern };
-    },
+    }
 
 
     /**
@@ -239,7 +239,7 @@ class Geocon {
      * @returns {} An object with the following structure:
      * { northing: n, easting: e, latZone: z0, lngZone: z1, digraph: xx }
      */
-    utmToNato: function (x, y, utmz, southern) {
+    utmToNato (x, y, utmz, southern) {
         var esq = (1 - (this.b / this.a) * (this.b / this.a));
         var e0sq = this.e * this.e / (1 - Math.pow(this.e, 2));
         var e1 = (1 - Math.sqrt(1 - Math.pow(this.e, 2))) / (1 + Math.sqrt(1 - Math.pow(this.e, 2)));
@@ -278,7 +278,7 @@ class Geocon {
             lngZone: utmz,
             digraph: digraph
         }
-    },
+    }
 
 
     /**
@@ -289,7 +289,7 @@ class Geocon {
      * @param {} y: northing
      * @param {} utmz: utm zone
      */
-    makeDigraph: function (x, y, utmz) {
+    makeDigraph (x, y, utmz) {
         // first get the east digraph letter
         var letter = Math.floor((utmz - 1) * 8 + (x) / 100000);
         letter = letter - 24 * Math.floor(letter / 24) - 1;
@@ -302,7 +302,7 @@ class Geocon {
 
         return digraph;
     }
-};
+}
 
 
 //Static/class property
