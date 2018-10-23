@@ -11,25 +11,7 @@ const DIAGRAPH_LETTERS_ALL = "ABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJK
 class Geocon {
 
     constructor (index) {
-      this.datumTable: [
-        { eqRad: 6378137.0, flat: 298.2572236 },    // WGS 84
-        { eqRad: 6378137.0, flat: 298.2572236 },    // NAD 83
-        { eqRad: 6378137.0, flat: 298.2572215 },    // GRS 80
-        { eqRad: 6378135.0, flat: 298.2597208 },    // WGS 72
-        { eqRad: 6378160.0, flat: 298.2497323 },    // Austrailian 1965
-        { eqRad: 6378245.0, flat: 298.2997381 },    // Krasovsky 1940
-        { eqRad: 6378206.4, flat: 294.9786982 },    // North American 1927
-        { eqRad: 6378388.0, flat: 296.9993621 },    // International 1924
-        { eqRad: 6378388.0, flat: 296.9993621 },    // Hayford 1909
-        { eqRad: 6378249.1, flat: 293.4660167 },    // Clarke 1880
-        { eqRad: 6378206.4, flat: 294.9786982 },    // Clarke 1866
-        { eqRad: 6377563.4, flat: 299.3247788 },    // Airy 1830
-        { eqRad: 6377397.2, flat: 299.1527052 },    // Bessel 1841
-        { eqRad: 6377276.3, flat: 300.8021499 }     // Everest 1830
-      ],
-
-
-      this.datum = this.datumTable[index];
+      this.datum = Geocon.datumTable[index];
       // equatorial radius in meters
       this.a = this.datum.eqRad;
       // polar flattening
@@ -41,8 +23,6 @@ class Geocon {
       // e'
       this.e0 = this.e / Math.sqrt(1 - Math.pow(this.e, 1));
     },
-
-
 
 
     /**
@@ -124,7 +104,6 @@ class Geocon {
     },
 
 
-
     /**
      *
      * convert a set of global UTM coordinates to lat/lng returned as follows
@@ -171,8 +150,6 @@ class Geocon {
     },
 
 
-
-
     /**
      * takes a set of NATO style UTM coordinates and converts them to a lat/lng pair.
      *
@@ -189,7 +166,6 @@ class Geocon {
         var coords = this.natoToUtm(utme, utmn, utmz, latz, digraph);
         return this.utmToLatLng(coords.easting, coords.northing, coords.zone, coords.southern);
     },
-
 
 
     /**
@@ -273,7 +249,6 @@ class Geocon {
     },
 
 
-
     /**
      *
      * returns a set of nato coordinates from a set of global UTM coordinates
@@ -337,7 +312,6 @@ class Geocon {
     },
 
 
-
     /**
      *
      * create a nato grid digraph.
@@ -364,6 +338,25 @@ class Geocon {
         return digraph;
     }
 };
+
+
+//Static/class property
+Geocon.datumTable = [
+  { eqRad: 6378137.0, flat: 298.2572236 },    // WGS 84
+  { eqRad: 6378137.0, flat: 298.2572236 },    // NAD 83
+  { eqRad: 6378137.0, flat: 298.2572215 },    // GRS 80
+  { eqRad: 6378135.0, flat: 298.2597208 },    // WGS 72
+  { eqRad: 6378160.0, flat: 298.2497323 },    // Austrailian 1965
+  { eqRad: 6378245.0, flat: 298.2997381 },    // Krasovsky 1940
+  { eqRad: 6378206.4, flat: 294.9786982 },    // North American 1927
+  { eqRad: 6378388.0, flat: 296.9993621 },    // International 1924
+  { eqRad: 6378388.0, flat: 296.9993621 },    // Hayford 1909
+  { eqRad: 6378249.1, flat: 293.4660167 },    // Clarke 1880
+  { eqRad: 6378206.4, flat: 294.9786982 },    // Clarke 1866
+  { eqRad: 6377563.4, flat: 299.3247788 },    // Airy 1830
+  { eqRad: 6377397.2, flat: 299.1527052 },    // Bessel 1841
+  { eqRad: 6377276.3, flat: 300.8021499 }     // Everest 1830
+];
 
 
 
