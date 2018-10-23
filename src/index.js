@@ -26,7 +26,7 @@ class Geocon {
 
 
     /**
-     *
+     * @description
      * given a lat/lng pair, returns both global UTM and NATO UTM in the following form:
      * utm:
      * {
@@ -34,9 +34,8 @@ class Geocon {
      *     nato: { northing: n, easting: e, latzone: z0, lngzone: z1, digraph: xx }
      * }
      *
-     * this function assumes that all data validation has been performed prior to calling
-     * it.
-     *
+     * This method assumes that all data validation has been performed prior to
+     * calling it.
      */
     latLngToUtm: function (lat, lngd) {
         var phi = lat * DRAD;                              // convert latitude to radians
@@ -105,17 +104,14 @@ class Geocon {
 
 
     /**
-     *
+     * @description
      * convert a set of global UTM coordinates to lat/lng returned as follows
-     *
      * { lat: y, lng: x }
      *
-     * inputs:
-     *     x: easting
-     *     y: northing
-     *     utmz: utm zone
-     *     southern: bool indicating coords are in southern hemisphere
-     *
+     * @param {} x: easting
+     * @param {} y: northing
+     * @param {} utmz: utm zone
+     * @param {} southern: bool indicating coords are in southern hemisphere
      */
     utmToLatLng: function (x, y, utmz, southern) {
         var esq = (1 - (this.b / this.a) * (this.b / this.a));
@@ -125,10 +121,8 @@ class Geocon {
         var M0 = 0;
         var M = 0;
 
-        if (!southern)
-            M = M0 + y / K0;    // Arc length along standard meridian.
-        else
-            M = M0 + (y - 10000000) / K;
+        if (!southern) M = M0 + y / K0;    // Arc length along standard meridian.
+        else M = M0 + (y - 10000000) / K;
 
         var mu = M / (this.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))));
         var phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * Math.sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * Math.sin(4 * mu);   //Footprint Latitude
@@ -151,16 +145,16 @@ class Geocon {
 
 
     /**
-     * takes a set of NATO style UTM coordinates and converts them to a lat/lng pair.
+     * @description
+     * Takes a set of NATO style UTM coordinates and converts them to a lat/lng pair.
      *
-     * { lat: y, lng: x }
+     * @param {} utme: easting
+     * @param {} utmn: northing
+     * @param {} utmz: longitudinal zone
+     * @param {} latz: character representing latitudinal zone
+     * @param {} digraph: string representing grid
      *
-     * inputs:
-     *    utme: easting
-     *    utmn: northing
-     *    utmz: longitudinal zone
-     *    latz: character representing latitudinal zone
-     *    digraph: string representing grid
+     * @returns { lat: y, lng: x }
      */
     natoToLatLng: function (utme, utmn, utmz, latz, digraph) {
         var coords = this.natoToUtm(utme, utmn, utmz, latz, digraph);
@@ -169,20 +163,17 @@ class Geocon {
 
 
     /**
+     * @description
+     * Convert a set of NATO coordinates to the global system.
+     * Checks for digraph validity
      *
-     * convert a set of nato coordinates to the global system.  returns a structure
+     * @param {} utme: easting
+     * @param {} utmn: northing
+     * @param {} utmz: longitudinal zone
+     * @param {} latz: character representing latitudinal zone
+     * @param {} digraph: string representing grid
      *
-     * { norhting: y, easting: x, zone: zone, southern: hemisphere }
-     *
-     * inputs:
-     *     utme: easting
-     *     utmn: northing
-     *     utmz: longitudinal zone
-     *     latz: character representing latitudinal zone
-     *     digraph: string representing grid
-     *
-     * checks for digraph validity
-     *
+     * @returns {} a structure { norhting: y, easting: x, zone: zone, southern: hemisphere }
      */
     natoToUtm: function (utme, utmn, utmz, latz, digraph) {
         latz = latz.toUpperCase();
@@ -191,21 +182,15 @@ class Geocon {
         var eltr = digraph.charAt(0);
         var nltr = digraph.charAt(1);
 
-        ///
-        /// make sure the digraph is consistent
-        ///
-        if (nltr == "I" || eltr == "O")
-            throw "I and O are not legal digraph characters";
-
-        if (nltr == "W" || nltr == "X" || nltr == "Y" || nltr == "Z")
-            throw "W, X, Y and Z are not legal second characters in a digraph";
+        // make sure the digraph is consistent
+        if (nltr == "I" || eltr == "O") throw "I and O are not legal digraph characters";
+        if (nltr == "W" || nltr == "X" || nltr == "Y" || nltr == "Z") throw "W, X, Y and Z are not legal second characters in a digraph";
 
         var eidx = DIAGRAPH_LETTERS_E.indexOf(eltr);
         var nidx = DIAGRAPH_LETTERS_N.indexOf(nltr);
 
-        if (utmz / 2 == Math.floor(utmz / 2)) {
-            nidx -= 5;  // correction for even numbered zones
-        }
+        // correction for even numbered zones
+        if (utmz / 2 == Math.floor(utmz / 2)) nidx -= 5;
 
         var ebase = 100000*(1 + eidx - 8 * Math.floor(eidx / 8));
 
@@ -227,21 +212,14 @@ class Geocon {
         var lowLetter = Math.floor(100 + 1.11 * latBandLow);
         var highLetter = Math.round(100 + 1.11 * latBandHigh);
         var latBandLetters = null;
-        if (utmz / 2 == Math.floor(utmz / 2)) {
-            latBandLetters = DIAGRAPH_LETTERS_ALL.slice(lowLetter + 5, highLetter + 5);
-        } else {
-            latBandLetters = DIAGRAPH_LETTERS_ALL.slice(lowLetter, highLetter);
-        }
+        if (utmz / 2 == Math.floor(utmz / 2)) latBandLetters = DIAGRAPH_LETTERS_ALL.slice(lowLetter + 5, highLetter + 5);
+        else latBandLetters = DIAGRAPH_LETTERS_ALL.slice(lowLetter, highLetter);
         var nbase = 100000 * (lowLetter + latBandLetters.indexOf(nltr));
 
         var x = ebase + utme;
         var y = nbase + utmn;
-        if (y > 10000000) {
-            y = y - 10000000;
-        }
-        if (nbase >= 10000000) {
-            y = nbase + utmn - 10000000;
-        }
+        if (y > 10000000) y = y - 10000000;
+        if (nbase >= 10000000) y = nbase + utmn - 10000000;
 
         var southern = nbase < 10000000;
 
@@ -250,17 +228,16 @@ class Geocon {
 
 
     /**
+     * @description
+     * Returns a set of NATO coordinates from a set of global UTM coordinates
      *
-     * returns a set of nato coordinates from a set of global UTM coordinates
-     * return is an object with the following structure:
-     *     { northing: n, easting: e, latZone: z0, lngZone: z1, digraph: xx }
+     * @param {} x: easting
+     * @param {} y: northing
+     * @param {} utmz: the utm zone
+     * @param {} southern: hemisphere indicator
      *
-     * inputs:
-     *     x: easting
-     *     y: northing
-     *     utmz: the utm zone
-     *     southern: hemisphere indicator
-     *
+     * @returns {} An object with the following structure:
+     * { northing: n, easting: e, latZone: z0, lngZone: z1, digraph: xx }
      */
     utmToNato: function (x, y, utmz, southern) {
         var esq = (1 - (this.b / this.a) * (this.b / this.a));
@@ -268,14 +245,10 @@ class Geocon {
         var e1 = (1 - Math.sqrt(1 - Math.pow(this.e, 2))) / (1 + Math.sqrt(1 - Math.pow(this.e, 2)));
         var M0 = 0;
 
-        if (!southern)
-            M = M0 + y / K0;    // Arc length along standard meridian.
-        else
-            M = M0 + (y - 10000000) / K;
+        if (!southern) M = M0 + y / K0;    // Arc length along standard meridian.
+        else M = M0 + (y - 10000000) / K;
 
-        //
         // calculate the latitude so that we can derive the latitude zone
-        //
         var mu = M / (this.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))));
         var phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * Math.sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * Math.sin(4 * mu);   //Footprint Latitude
         phi1 = phi1 + e1 * e1 * e1 * (Math.sin(6 * mu) * 151 / 96 + e1 * Math.sin(8 * mu) * 1097 / 512);
@@ -290,13 +263,9 @@ class Geocon {
         var lat = Math.floor(1000000 * phi / DRAD) / 1000000;
 
         // convert latitude to latitude zone for nato
-        if (lat > -80 && lat < 72) {
-            latz = Math.floor((lat + 80) / 8) + 2;      // zones C-W in this range
-        } if (lat > 72 && lat < 84) {
-            latz = 21;                                  // zone X
-        } else if (lat > 84) {
-            latz = 23;                                  // zone Y-Z
-        }
+        if (lat > -80 && lat < 72) latz = Math.floor((lat + 80) / 8) + 2; // zones C-W in this range
+        else if (lat > 72 && lat < 84) latz = 21;                         // zone X
+        else if (lat > 84) latz = 23;                                     // zone Y-Z
 
         var digraph = this.makeDigraph(x, y, utmz);
         x = Math.round(10 * (x - 100000 * Math.floor(x / 100000))) / 10;
@@ -313,19 +282,15 @@ class Geocon {
 
 
     /**
+     * @description
+     * Creates a NATO grid digraph.
      *
-     * create a nato grid digraph.
-     *
-     * inputs:
-     *     x: easting
-     *     y: northing
-     *     utmz: utm zone
-     *
+     * @param {} x: easting
+     * @param {} y: northing
+     * @param {} utmz: utm zone
      */
     makeDigraph: function (x, y, utmz) {
-        //
         // first get the east digraph letter
-        //
         var letter = Math.floor((utmz - 1) * 8 + (x) / 100000);
         letter = letter - 24 * Math.floor(letter / 24) - 1;
         var digraph = DIAGRAPH_LETTERS_E.charAt(letter);
