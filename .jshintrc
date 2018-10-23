@@ -1,0 +1,8 @@
+{
+	"esversion": 6,
+	"laxcomma": true,
+	"unused": true,
+	"undef": true,
+	"lastsemic": true,
+	"node": true
+}
