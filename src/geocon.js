@@ -325,4 +325,4 @@ Geocon.datumTable = [
 
 
 
-module.exports = geocon;
+module.exports = Geocon;
