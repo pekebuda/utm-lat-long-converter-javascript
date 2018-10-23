@@ -1,0 +1,30 @@
+{
+  "name": "utm-lat-long-converter",
+  "version": "0.0.1",
+  "description": "A UTM -> Lat/Long (or vice versa) converter.",
+  "main": "index.js",
+  "author": "Fernando Diaz <peke_buda@hotmail.com>",
+  "license": "MIT",
+  "private": false,
+  "keywords": [
+    "geo",
+    "geospatial",
+    "converter",
+    "coordinates",
+    "latitude",
+    "longitude",
+    "utm"
+  ],
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pekebuda/utm-lat-long-converter-javascript"
+  },
+  "bugs": {
+    "url": "https://github.com/pekebuda/utm-lat-long-converter-javascript"
+  },
+  "devDependencies": {}
+}
