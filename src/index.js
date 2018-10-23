@@ -1,28 +1,14 @@
-/**
- * I've taken the calculations portion of his script and turned it into a singleton
- * javascript object so that it is no longer dependent on the controls used on the page
- * to use this script, call setDatum with the index of the datum to be used and then
- * call the various conversion functions latLngToUtm(), utmToLatLng() or natoToLatLng(), utmToNato(), natoToUtm()
- * to convert between the various coordinate systems, hopefully accurately!
- */
-geocon = {
-    //constants taken from or calculated from the datum
-    a: 0,   // equatorial radius in meters
-    f: 0,   // polar flattening
-    b: 0,   // polar radius in meters
-    e: 0,   // eccentricity
-    e0: 0,  // e'
+class Geocon {
 
-
-    //constants used in calculations
-    k: 1,
-    k0: 0.9996,
-    drad: Math.PI / 180,
-
-    digraphLettersE: "ABCDEFGHJKLMNPQRSTUVWXYZ",
-    digraphLettersN: "ABCDEFGHJKLMNPQRSTUV",
-    digraphLettersAll: "ABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUV",
-    datumTable: [
+    constructor (index) {
+      //constants used in calculations
+      this.k: 1,
+      this.k0: 0.9996,
+      this.drad: Math.PI / 180,
+      this.digraphLettersE: "ABCDEFGHJKLMNPQRSTUVWXYZ",
+      this.digraphLettersN: "ABCDEFGHJKLMNPQRSTUV",
+      this.digraphLettersAll: "ABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUV",
+      this.datumTable: [
         { eqRad: 6378137.0, flat: 298.2572236 },    // WGS 84
         { eqRad: 6378137.0, flat: 298.2572236 },    // NAD 83
         { eqRad: 6378137.0, flat: 298.2572215 },    // GRS 80
@@ -37,22 +23,22 @@ geocon = {
         { eqRad: 6377563.4, flat: 299.3247788 },    // Airy 1830
         { eqRad: 6377397.2, flat: 299.1527052 },    // Bessel 1841
         { eqRad: 6377276.3, flat: 300.8021499 }     // Everest 1830
-    ],
+      ],
 
 
-
-
-    /**
-     * calculate constants used for doing conversions using a given map datum
-     */
-    setDatum: function (index) {
-        var datum = this.datumTable[index];
-        this.a = datum.eqRad;
-        this.f = 1 / datum.flat;
-        this.b = this.a * (1 - this.f);   // polar radius
-        this.e = Math.sqrt(1 - Math.pow(this.b, 2) / Math.pow(this.a, 2));
-        this.e0 = this.e / Math.sqrt(1 - Math.pow(this.e, 1));
+      var datum = this.datumTable[index];
+      // equatorial radius in meters
+      this.a = datum.eqRad;
+      // polar flattening
+      this.f = 1 / datum.flat;
+      // polar radius in meters
+      this.b = this.a * (1 - this.f);
+      // eccentricity
+      this.e = Math.sqrt(1 - Math.pow(this.b, 2) / Math.pow(this.a, 2));
+      // e'
+      this.e0 = this.e / Math.sqrt(1 - Math.pow(this.e, 1));
     },
+
 
 
 
