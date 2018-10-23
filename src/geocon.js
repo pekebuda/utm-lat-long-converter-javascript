@@ -38,8 +38,8 @@ class Geocon {
      * calling it.
      */
     latLngToUtm (lat, lngd) {
-        var phi = lat * DRAD;                              // convert latitude to radians
-        var lng = lngd * DRAD;                             // convert longitude to radians
+        var phi = lat * DRAD;                                   // convert latitude to radians
+        var lng = lngd * DRAD;                                  // convert longitude to radians
         var utmz = 1 + Math.floor((lngd + 180) / 6);            // longitude to utm zone
         var zcm = 3 + 6 * (utmz - 1) - 180;                     // central meridian of a zone
         var latz = 0;                                           // this gives us zone A-B for below 80S
@@ -97,7 +97,7 @@ class Geocon {
                 lngZone: utmz,
                 digraph: digraph
             }
-        }
+        };
 
         return rv;
     }
@@ -138,7 +138,8 @@ class Geocon {
 
         var lat = Math.floor(1000000 * phi / DRAD) / 1000000;
         var lng = D * (1 + D * D * ((-1 - 2 * T1 - C1) / 6 + D * D * (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * e0sq + 24 * T1 * T1) / 120)) / Math.cos(phi1);
-        lng = lngd = zcm + lng / DRAD;
+        var lngd = zcm + lng / DRAD;
+        lng = lngd;
 
         return { lat: lat, lng: lng };
     }
