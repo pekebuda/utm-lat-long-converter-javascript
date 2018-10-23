@@ -17,7 +17,7 @@
   ],
   "dependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./tests"
   },
   "repository": {
     "type": "git",
@@ -26,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/pekebuda/utm-lat-long-converter-javascript"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "lodash.round": "^4.0.4",
+    "mocha": "^5.2.0"
+  }
 }
